@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TahfidzPro - Monitoring Hafalan Al-Qur'an</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        },
+                        gold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDRhZc32dUUpT9nHr4dx3iRdlN-y_0HUYU",
+    authDomain: "proyek-coch-rahman.firebaseapp.com",
+    projectId: "proyek-coch-rahman",
+    storageBucket: "proyek-coch-rahman.firebasestorage.app",
+    messagingSenderId: "386995877364",
+    appId: "1:386995877364:web:0233228281b49cc411f5a1",
+    measurementId: "G-14FC0LMKR6"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        
+        .font-arabic {
+            font-family: 'Amiri', serif;
+        }
+
+        /* Custom subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Print formatting */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white;
+                color: black;
+            }
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Geometric subtle background pattern */
+        .islamic-pattern {
+            background-color: #064e3b;
+            background-image: radial-gradient(rgba(245, 158, 11, 0.15) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Top Navbar -->
+    <header class="bg-emerald-950 text-white sticky top-0 z-30 shadow-md border-b border-emerald-800/50 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand & Logo -->
+                <div class="flex items-center space-x-3">
+                    <button id="mobileMenuBtn" class="lg:hidden text-emerald-200 hover:text-white focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('dashboard')">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-800 border border-gold-400/40 flex items-center justify-center shadow-lg text-gold-400">
+                            <i class="fa-solid fa-book-quran text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
+                                Tahfidz<span class="text-gold-400">Pro</span>
+                                <span class="bg-emerald-800 text-emerald-200 text-[10px] px-2 py-0.5 rounded-full font-medium tracking-wide">v2.4</span>
+                            </span>
+                            <p class="text-[10px] text-emerald-300/80 hidden sm:block leading-none">Monitoring Hafalan, Membentuk Generasi Qur'ani</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Global Search Input -->
+                <div class="hidden md:flex flex-1 max-w-md mx-8 relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-emerald-400">
+                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                    </div>
+                    <input type="text" id="globalSearchInput" onkeyup="handleGlobalSearch(event)" placeholder="Cari santri, musyrif, surah, atau setoran..." class="w-full pl-9 pr-4 py-2 text-sm bg-emerald-900/60 border border-emerald-700/60 rounded-xl text-white placeholder-emerald-300/60 focus:outline-none focus:ring-2 focus:ring-gold-400/80 focus:border-transparent transition-all">
+                    <!-- Global Search Dropdown Results -->
+                    <div id="globalSearchResults" class="hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 text-slate-800 overflow-hidden z-50 max-h-96 overflow-y-auto"></div>
+                </div>
+
+                <!-- Right Nav Items & Demo Role Switcher -->
+                <div class="flex items-center space-x-3">
+                    <!-- Demo Role Switcher Dropdown -->
+                    <div class="relative inline-block text-left">
+                        <div class="flex items-center bg-emerald-900/80 rounded-xl p-1 border border-emerald-700/50">
+                            <span class="text-xs text-emerald-300 font-medium px-2 hidden sm:inline"><i class="fa-solid fa-user-gear text-gold-400 mr-1"></i> Mode Role:</span>
+                            <select id="roleSelector" onchange="switchRole(this.value)" class="bg-emerald-950 text-gold-400 font-semibold text-xs rounded-lg px-2 py-1 border border-emerald-700/80 focus:outline-none cursor-pointer">
+                                <option value="admin">Admin Pesantren</option>
+                                <option value="ustadz">Ustadz / becce</option>
+                                <option value="santri">Santri (Baco)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Notification Button -->
+                    <button onclick="navigateTo('notifications')" class="relative p-2 text-emerald-200 hover:text-white rounded-xl hover:bg-emerald-900/60 transition-all">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span id="notifBadge" class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-emerald-950"></span>
+                    </button>
+
+                    <!-- User Profile Dropdown / Quick Info -->
+                    <div class="flex items-center space-x-2 pl-2 border-l border-emerald-800/80">
+                        <img id="headerUserAvatar" src="WhatsApp Image 2026-10-06 at 10.13.53.jpeg" alt="Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-gold-400/80 shadow">
+                        <div class="hidden lg:block text-left">
+                            <p id="headerUserName" class="text-xs font-semibold text-white leading-tight">Ustadz Ahmad, S.Pd.I</p>
+                            <p id="headerUserRole" class="text-[10px] text-gold-400 font-medium">Administrator</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex-1 max-w-7xl w-full mx-auto flex overflow-hidden">
+        
+        <!-- Left Sidebar Navigation (Desktop) -->
+        <aside id="sidebar" class="w-64 bg-white border-r border-slate-200 flex-shrink-0 hidden lg:flex flex-col justify-between py-6 no-print">
+            <div class="px-4 space-y-1 overflow-y-auto">
+                <div class="px-3 pb-3 border-b border-slate-100">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Menu Utama</p>
+                </div>
+                
+                <nav class="space-y-1 pt-2" id="navContainer">
+                    <!-- Nav buttons rendered dynamically via JS based on user role -->
+                </nav>
+            </div>
+
+            <!-- Footer info in Sidebar -->
+            <div class="px-6 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                <div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100 mb-3">
+                    <div class="flex items-center space-x-2 text-emerald-800 font-semibold mb-1">
+                        <i class="fa-solid fa-mosque text-emerald-600"></i>
+                        <span>Tahun Ajaran</span>
+                    </div>
+                    <p class="text-[11px] text-emerald-700">2026/2027 • Semester Ganjil</p>
+                </div>
+                <p class="text-[10px] text-center text-slate-400">© 2029 TahfidzPro System</p>
+            </div>
+        </aside>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobileDrawer" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden lg:hidden no-print" onclick="toggleMobileMenu()">
+            <div class="w-72 bg-white h-full flex flex-col justify-between p-6 shadow-2xl" onclick="event.stopPropagation()">
+                <div>
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-gold-400">
+                                <i class="fa-solid fa-book-quran text-base"></i>
+                            </div>
+                            <span class="font-extrabold text-slate-800 text-base">Tahfidz<span class="text-gold-600">Pro</span></span>
+                        </div>
+                        <button onclick="toggleMobileMenu()" class="text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-xmark text-xl"></i>
+                        </button>
+                    </div>
+                    <nav class="space-y-1" id="mobileNavContainer">
+                        <!-- Mobile nav buttons -->
+                    </nav>
+                </div>
+                <div class="pt-4 border-t border-slate-100 text-center">
+                    <p class="text-xs text-slate-500">Versi 2.4 Enterprise Edition</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+            
+            <!-- Greeting & Header Banner -->
+            <div id="topBanner" class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-950 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-10 opacity-10 pointer-events-none">
+                    <i class="fa-solid fa-kaaba text-9xl"></i>
+                </div>
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2 text-gold-400 text-xs font-semibold mb-1">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            <span id="currentIslamicDate">20 Rabi'ul Akhir 1448 H</span>
+                            <span>•</span>
+                            <span id="currentGregorianDate">Selasa, 6 Oktober 2026</span>
+                        </div>
+                        <h1 id="welcomeTitle" class="text-xl sm:text-2xl font-bold tracking-tight">Assalamu'alaikum, Ustadz Ahmad</h1>
+                        <p id="welcomeSubtitle" class="text-xs sm:text-sm text-emerald-200 mt-1">Selamat datang kembali di Portal TahfidzPro. Mari pantau capaian hafalan santri hari ini.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="openModal('modalSetoran')" class="bg-gold-500 hover:bg-gold-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-md transition text-xs sm:text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-plus text-sm"></i>
+                            <span>Catat Setoran</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DYNAMIC VIEW CONTAINER -->
+            <div id="viewContainer">
+                <!-- Page content will be injected dynamically via JavaScript -->
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="lg:hidden bg-white border-t border-slate-200 fixed bottom-0 left-0 right-0 z-30 flex justify-around items-center py-2 shadow-lg no-print">
+        <button onclick="navigateTo('dashboard')" class="flex flex-col items-center text-slate-600 focus:text-emerald-800">
+            <i class="fa-solid fa-chart-pie text-lg"></i>
+            <span class="text-[10px] font-medium mt-0.5">Beranda</span>
+        </button>
+        <button onclick="navigateTo('santri')" class="flex flex-col items-center text-slate-600 focus:text-emerald-800">
+            <i class="fa-solid fa-users text-lg"></i>
+            <span class="text-[10px] font-medium mt-0.5">Santri</span>
+        </button>
+        <button onclick="openModal('modalSetoran')" class="flex flex-col items-center text-gold-600">
+            <div class="w-10 h-10 -mt-5 bg-emerald-800 text-gold-400 rounded-full flex items-center justify-center border-2 border-white shadow-md">
+                <i class="fa-solid fa-plus text-lg"></i>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-900 mt-0.5">Setor</span>
+        </button>
+        <button onclick="navigateTo('murajaah')" class="flex flex-col items-center text-slate-600 focus:text-emerald-800">
+            <i class="fa-solid fa-rotate text-lg"></i>
+            <span class="text-[10px] font-medium mt-0.5">Murajaah</span>
+        </button>
+        <button onclick="navigateTo('quran')" class="flex flex-col items-center text-slate-600 focus:text-emerald-800">
+            <i class="fa-solid fa-book-open text-lg"></i>
+            <span class="text-[10px] font-medium mt-0.5">Al-Qur'an</span>
+        </button>
+    </nav>
+
+    <!-- MODAL: Tambah Setoran Hafalan -->
+    <div id="modalSetoran" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden no-print">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-emerald-900 text-white rounded-t-2xl">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-book-bookmark text-gold-400"></i>
+                    <h3 class="font-bold text-base">Input Setoran Hafalan Santri</h3>
+                </div>
+                <button onclick="closeModal('modalSetoran')" class="text-emerald-200 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="formSetoran" onsubmit="handleSaveSetoran(event)" class="p-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Pilih Santri *</label>
+                        <select id="setoranSantriId" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                            <option value="">-- Pilih Santri --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal Setoran *</label>
+                        <input type="date" id="setoranTanggal" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Jenis Setoran *</label>
+                        <select id="setoranJenis" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                            <option value="Hafalan Baru">Hafalan Baru (Ziyadah)</option>
+                            <option value="Murojaah">Murajaah (Pengulangan)</option>
+                            <option value="Tasmi'">Tasmi' (Ujian Hafalan)</option>
+                            <option value="Pengulangan">Pengulangan Perbaikan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Surah *</label>
+                        <select id="setoranSurah" required onchange="handleSurahSelectChange(this.value)" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                            <!-- Surah list populated via JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Ayat Mulai</label>
+                        <input type="number" id="setoranAyatMulai" min="1" value="1" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Ayat Akhir</label>
+                        <input type="number" id="setoranAyatAkhir" min="1" value="10" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Halaman</label>
+                        <input type="number" id="setoranHalaman" min="1" value="1" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Juz</label>
+                        <input type="number" id="setoranJuz" min="1" max="30" value="30" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600">
+                    </div>
+                </div>
+
+                <!-- Evaluasi Scoring Section -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                    <p class="text-xs font-bold text-emerald-900 border-b border-slate-200 pb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-sliders text-gold-600"></i> Penilaian Kualitas Bacaan (Skala 1-100)
+                    </p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600">Kelancaran</label>
+                            <input type="number" id="scoreKelancaran" min="50" max="100" value="85" class="w-full text-xs p-2 rounded-lg border border-slate-300 font-semibold text-emerald-800">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600">Tajwid</label>
+                            <input type="number" id="scoreTajwid" min="50" max="100" value="88" class="w-full text-xs p-2 rounded-lg border border-slate-300 font-semibold text-emerald-800">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600">Makhraj</label>
+                            <input type="number" id="scoreMakhraj" min="50" max="100" value="86" class="w-full text-xs p-2 rounded-lg border border-slate-300 font-semibold text-emerald-800">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600">Fashahah</label>
+                            <input type="number" id="scoreFashahah" min="50" max="100" value="87" class="w-full text-xs p-2 rounded-lg border border-slate-300 font-semibold text-emerald-800">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600">Adab & Sikap</label>
+                            <input type="number" id="scoreAdab" min="50" max="100" value="90" class="w-full text-xs p-2 rounded-lg border border-slate-300 font-semibold text-emerald-800">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600">Status Setoran</label>
+                            <select id="setoranStatus" class="w-full text-xs p-2 rounded-lg border border-slate-300 font-bold bg-white text-emerald-900">
+                                <option value="Diterima">Diterima (Lulus)</option>
+                                <option value="Perlu Diulang">Perlu Diulang</option>
+                                <option value="Menunggu Penilaian">Menunggu Evaluasi</option>
+                                <option value="Selesai">Selesai 1 Juz</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan Pembinaan / Perbaikan Ustadz</label>
+                    <textarea id="setoranCatatan" rows="2" placeholder="Contoh: Perhatikan panjang pendek pada ayat 5, tajwid ghunnah sudah baik..." class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-600"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modalSetoran')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl shadow-md">Simpan Setoran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Detail Santri -->
+    <div id="modalDetailSantri" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden no-print">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-100">
+            <div id="detailSantriContent" class="p-6">
+                <!-- Dynamic Content Injected via JS -->
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end space-x-3 rounded-b-2xl">
+                <button onclick="closeModal('modalDetailSantri')" class="px-5 py-2 text-xs font-bold bg-slate-800 text-white rounded-xl">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Confirmation Two-Step Dialog -->
+    <div id="modalConfirm" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden no-print">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl text-center border border-slate-100">
+            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="confirmTitle" class="font-bold text-base text-slate-800">Konfirmasi Tindakan</h3>
+            <p id="confirmMessage" class="text-xs text-slate-600 mt-2 mb-6">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
+            <div class="flex justify-center space-x-3">
+                <button onclick="closeModal('modalConfirm')" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">Batal</button>
+                <button id="confirmExecuteBtn" class="px-5 py-2 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-md">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none no-print"></div>
+
+    <script>
+        
+        // APP STATE STORE
+        const state = {
+            currentRole: 'admin', // admin, ustadz, santri
+            currentUser: {
+                id: 'u1',
+                name: 'Ustadz Ahmad, S.Pd.I',
+                role: 'admin',
+                email: 'ahmad@tahfidzpro.sch.id',
+                avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120'
+            },
+            activeTab: 'dashboard',
+            santriList: [
+                { id: 'S001', nis: '10293801', name: 'Muhammad Farhan', class: 'X IPA 1', halaqah: 'Halaqah Imam Asy-Syafi\'i', musyrif: 'Ustadz Ahmad, S.Pd.I', currentJuz: 12, targetJuz: 15, currentSurah: 'Al-Baqarah', currentAyat: 180, totalPage: 240, status: 'Aktif', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=120', phone: '081234567891' },
+                { id: 'S002', nis: '10293802', name: 'Abdullah Az-Zubair', class: 'X IPA 1', halaqah: 'Halaqah Imam Asy-Syafi\'i', musyrif: 'Ustadz Ahmad, S.Pd.I', currentJuz: 8, targetJuz: 10, currentSurah: 'Al-An\'am', currentAyat: 45, totalPage: 160, status: 'Aktif', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120', phone: '081234567892' },
+                { id: 'S003', nis: '10293803', name: 'Aisyah An-Nabila', class: 'XI IPS 2', halaqah: 'Halaqah Sayyidah Aisyah', musyrif: 'Ustadzah Hafsah, M.Ag', currentJuz: 25, targetJuz: 30, currentSurah: 'Yasin', currentAyat: 30, totalPage: 500, status: 'Aktif', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120', phone: '081234567893' },
+                { id: 'S004', nis: '10293804', name: 'Fatimah Az-Zahra', class: 'XI IPS 2', halaqah: 'Halaqah Sayyidah Aisyah', musyrif: 'Ustadzah Hafsah, M.Ag', currentJuz: 18, targetJuz: 20, currentSurah: 'Al-Kahfi', currentAyat: 110, totalPage: 360, status: 'Aktif', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=120', phone: '081234567894' },
+                { id: 'S005', nis: '10293805', name: 'Zaid bin Tsabit', class: 'XII Agama', halaqah: 'Halaqah Imam Nafi\'', musyrif: 'Ustadz Mahmud, Lc', currentJuz: 29, targetJuz: 30, currentSurah: 'Al-Mulk', currentAyat: 30, totalPage: 580, status: 'Bina Khusus', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120', phone: '081234567895' },
+                { id: 'S006', nis: '10293806', name: 'Umar Al-Faruq', class: 'X IPA 2', halaqah: 'Halaqah Imam Asy-Syafi\'i', musyrif: 'Ustadz Ahmad, S.Pd.I', currentJuz: 5, targetJuz: 10, currentSurah: 'An-Nisa', currentAyat: 20, totalPage: 100, status: 'Perlu Perhatian', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=120', phone: '081234567896' }
+            ],
+            ustadzList: [
+                { id: 'U001', name: 'Ustadz Ahmad, S.Pd.I', halaqah: 'Halaqah Imam Asy-Syafi\'i', count: 12, email: 'ahmad@tahfidzpro.sch.id', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120' },
+                { id: 'U002', name: 'Ustadzah Hafsah, M.Ag', halaqah: 'Halaqah Sayyidah Aisyah', count: 15, email: 'hafsah@tahfidzpro.sch.id', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120' },
+                { id: 'U003', name: 'Ustadz Mahmud, Lc', halaqah: 'Halaqah Imam Nafi\'', count: 10, email: 'mahmud@tahfidzpro.sch.id', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=120' }
+            ],
+            setoranList: [
+                { id: 'STR-101', santriId: 'S001', santriName: 'Muhammad Farhan', date: '2026-10-06', type: 'Hafalan Baru', surahName: 'Al-Baqarah', ayatStart: 177, ayatEnd: 185, page: 27, juz: 2, status: 'Diterima', scoreKelancaran: 88, scoreTajwid: 90, scoreMakhraj: 86, scoreFashahah: 88, scoreAdab: 95, finalScore: 89, notes: 'Pengulangan mad thabi\'i sudah tajam, pertahankan hafalan.' },
+                { id: 'STR-102', santriId: 'S002', santriName: 'Abdullah Az-Zubair', date: '2026-10-06', type: 'Murojaah', surahName: 'Al-An\'am', ayatStart: 30, ayatEnd: 45, page: 132, juz: 7, status: 'Diterima', scoreKelancaran: 85, scoreTajwid: 85, scoreMakhraj: 84, scoreFashahah: 85, scoreAdab: 90, finalScore: 85, notes: 'Lancar, perhatikan makhraj huruf Kho dan ' + 'Ain.' },
+                { id: 'STR-103', santriId: 'S006', santriName: 'Umar Al-Faruq', date: '2026-10-05', type: 'Hafalan Baru', surahName: 'An-Nisa', ayatStart: 1, ayatEnd: 10, page: 77, juz: 4, status: 'Perlu Diulang', scoreKelancaran: 65, scoreTajwid: 70, scoreMakhraj: 68, scoreFashahah: 70, scoreAdab: 85, finalScore: 71, notes: 'Masih banyak tersendat pada ikhfa\', harap disimak ulang dengan teman halaqah.' },
+                { id: 'STR-104', santriId: 'S003', santriName: 'Aisyah An-Nabila', date: '2026-10-06', type: 'Tasmi\'', surahName: 'Yasin', ayatStart: 1, ayatEnd: 83, page: 440, juz: 22, status: 'Selesai', scoreKelancaran: 96, scoreTajwid: 95, scoreMakhraj: 94, scoreFashahah: 96, scoreAdab: 98, finalScore: 96, notes: 'MasyaAllah, Tasmi\' 1 surah Yasin sekali duduk lancar sempurna.' }
+            ],
+            murajaahList: [
+                { id: 'MRJ-01', santriId: 'S001', santriName: 'Muhammad Farhan', date: '2026-10-06', pages: 10, juz: 1, fluency: 'Lancar', notes: 'Murojaah Juz 1 rutin sebelum Subuh.' },
+                { id: 'MRJ-02', santriId: 'S003', santriName: 'Aisyah An-Nabila', date: '2026-10-05', pages: 20, juz: 24, fluency: 'Sangat Lancar', notes: 'Murajaah Mandiri 1 Juz penuh.' }
+            ],
+            surahData: [
+                { id: 1, name: 'Al-Fatihah', arabic: 'الفاتحة', ayat: 7, place: 'Makkiyah', page: 1 },
+                { id: 2, name: 'Al-Baqarah', arabic: 'البقرة', ayat: 286, place: 'Madaniyah', page: 2 },
+                { id: 3, name: 'Ali \'Imran', arabic: 'آل عمران', ayat: 200, place: 'Madaniyah', page: 50 },
+                { id: 4, name: 'An-Nisa\'', arabic: 'النساء', ayat: 176, place: 'Madaniyah', page: 77 },
+                { id: 5, name: 'Al-Ma\'idah', arabic: 'المائدة', ayat: 120, place: 'Madaniyah', page: 106 },
+                { id: 6, name: 'Al-An\'am', arabic: 'الأنعام', ayat: 165, place: 'Makkiyah', page: 128 },
+                { id: 18, name: 'Al-Kahf', arabic: 'الكهف', ayat: 110, place: 'Makkiyah', page: 293 },
+                { id: 36, name: 'Yasin', arabic: 'يس', ayat: 83, place: 'Makkiyah', page: 440 },
+                { id: 67, name: 'Al-Mulk', arabic: 'الملك', ayat: 30, place: 'Makkiyah', page: 562 },
+                { id: 78, name: 'An-Naba\'', arabic: 'النبأ', ayat: 40, place: 'Makkiyah', page: 582 },
+                { id: 112, name: 'Al-Ikhlas', arabic: 'الإخلاص', ayat: 4, place: 'Makkiyah', page: 604 },
+                { id: 113, name: 'Al-Falaq', arabic: 'الفلق', ayat: 5, place: 'Makkiyah', page: 604 },
+                { id: 114, name: 'An-Nas', arabic: 'الناس', ayat: 6, place: 'Makkiyah', page: 604 }
+            ],
+            schedules: [
+                { id: 'SCH-1', title: 'Halaqah Subuh - Ziyadah', date: '2026-10-07', time: '05:30 - 06:30 WITA', location: 'Masjid Utama Pesantren', musyrif: 'Ustadz Ahmad', type: 'Halaqah' },
+                { id: 'SCH-2', title: 'Tasmi\' Akbar Bulanan', date: '2026-10-10', time: '08:00 - 11:30 WITA', location: 'Aula Nabawi', musyrif: 'Tim Musyrif', type: 'Tasmi' },
+                { id: 'SCH-3', title: 'Murajaah Mandiri Ashar', date: '2026-10-07', time: '16:00 - 17:00 WITA', location: 'Selasar Tahfidz', musyrif: 'Ustadz Mahmud', type: 'Murajaah' }
+            ],
+            notifications: [
+                { id: 'N1', title: 'Setoran Baru Diterima', text: 'Muhammad Farhan telah menyetorkan Al-Baqarah 177-185 dengan nilai 89.', date: '10 Menit lalu', read: false },
+                { id: 'N2', title: 'Jadwal Tasmi\' Bulanan', text: 'Jadwal Ujian Tasmi\' Akbar akan dilaksanakan pada Sabtu, 10 Oktober 2026.', date: '2 Jam lalu', read: false },
+                { id: 'N3', title: 'Peringatan Target', text: 'Santri Umar Al-Faruq belum menyetorkan hafalan baru dalam 3 hari terakhir.', date: '1 Hari lalu', read: true }
+            ],
+            achievements: [
+                { id: 'AC-1', santriId: 'S003', santriName: 'Aisyah An-Nabila', title: 'Katam Juz 25', date: '2026-10-01', category: 'Capaian Juz', desc: 'Berhasil menyelesaikan hafalan Juz 25 dengan predikat Mumtaz.' },
+                { id: 'AC-2', santriId: 'S001', santriName: 'Muhammad Farhan', title: 'Tasmi\' 5 Juz Sekali Duduk', date: '2026-09-20', category: 'Tasmi\'', desc: 'Lulus Ujian Tasmi\' 5 Juz tanpa kesalahan terbanyak.' }
+            ],
+            auditLogs: [
+                { id: 'LOG-1', time: '2026-10-06 08:30', user: 'Ustadz Ahmad', action: 'Input Setoran Hafalan', detail: 'Menambahkan setoran Al-Baqarah untuk Muhammad Farhan' },
+                { id: 'LOG-2', time: '2026-10-06 07:15', user: 'Admin', action: 'Perubahan Target', detail: 'Memperbarui target juz santri S001 menjadi 15 Juz' }
+            ]
+        };
+
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const bgClass = type === 'success' ? 'bg-emerald-900 border-emerald-700 text-white' : 'bg-rose-900 border-rose-700 text-white';
+            const icon = type === 'success' ? 'fa-circle-check text-gold-400' : 'fa-circle-xmark text-rose-300';
+            
+            toast.className = `flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 text-xs font-semibold ${bgClass}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileDrawer').classList.toggle('hidden');
+        }
+
+        function switchRole(role) {
+            state.currentRole = role;
+            if (role === 'admin') {
+                state.currentUser = {
+                    id: 'u1',
+                    name: 'Ustadz Ahmad, S.Pd.I',
+                    role: 'admin',
+                    email: 'admin@tahfidzpro.sch.id',
+                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120'
+                };
+            } else if (role === 'ustadz') {
+                state.currentUser = {
+                    id: 'u2',
+                    name: 'Ustadz Mahmud, Lc',
+                    role: 'ustadz',
+                    email: 'mahmud@tahfidzpro.sch.id',
+                    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=120'
+                };
+            } else {
+                state.currentUser = {
+                    id: 'S001',
+                    name: 'Muhammad Farhan',
+                    role: 'santri',
+                    email: 'farhan@santri.tahfidzpro.sch.id',
+                    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=120'
+                };
+            }
+
+            document.getElementById('headerUserName').innerText = state.currentUser.name;
+            document.getElementById('headerUserRole').innerText = role.toUpperCase();
+            document.getElementById('headerUserAvatar').src = state.currentUser.avatar;
+            document.getElementById('welcomeTitle').innerText = `Assalamu'alaikum, ${state.currentUser.name}`;
+
+            renderSidebarNav();
+            navigateTo('dashboard');
+            showToast(`Beralih ke mode tampilan ${role.toUpperCase()}`, 'success');
+        }
+
+        function addAuditLog(action, detail) {
+            state.auditLogs.unshift({
+                id: 'LOG-' + Date.now(),
+                time: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                user: state.currentUser.name,
+                action: action,
+                detail: detail
+            });
+        }
+
+
+        function renderSidebarNav() {
+            const navContainer = document.getElementById('navContainer');
+            const mobileNavContainer = document.getElementById('mobileNavContainer');
+            
+            const menus = [
+                { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie', roles: ['admin', 'ustadz', 'santri'] },
+                { id: 'santri', label: 'Data Santri', icon: 'fa-users', roles: ['admin', 'ustadz'] },
+                { id: 'setoran', label: 'Setoran Hafalan', icon: 'fa-book-bookmark', roles: ['admin', 'ustadz', 'santri'] },
+                { id: 'murajaah', label: 'Murajaah', icon: 'fa-rotate', roles: ['admin', 'ustadz', 'santri'] },
+                { id: 'target', label: 'Target Hafalan', icon: 'fa-bullseye', roles: ['admin', 'ustadz', 'santri'] },
+                { id: 'penilaian', label: 'Penilaian', icon: 'fa-award', roles: ['admin', 'ustadz'] },
+                { id: 'laporan', label: 'Laporan', icon: 'fa-file-invoice', roles: ['admin', 'ustadz', 'santri'] },
+                { id: 'jadwal', label: 'Jadwal Halaqah', icon: 'fa-calendar-days', roles: ['admin', 'ustadz', 'santri'] },
+                { id: 'quran', label: 'Al-Qur\'an Digital', icon: 'fa-book-quran', roles: ['admin', 'ustadz', 'santri'] },
+                { id: 'notifications', label: 'Notifikasi', icon: 'fa-bell', roles: ['admin', 'ustadz', 'santri'] },
+                { id: 'halaqah', label: 'Kelompok Halaqah', icon: 'fa-layer-group', roles: ['admin', 'ustadz'] },
+                { id: 'settings', label: 'Pengaturan & Audit', icon: 'fa-gear', roles: ['admin'] }
+            ];
+
+            let html = '';
+            menus.forEach(m => {
+                if (m.roles.includes(state.currentRole)) {
+                    const isActive = state.activeTab === m.id;
+                    const activeClass = isActive 
+                        ? 'bg-emerald-900 text-white font-bold shadow-sm' 
+                        : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-900 font-medium';
+                    
+                    html += `
+                        <button onclick="navigateTo('${m.id}')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs transition-all ${activeClass}">
+                            <i class="fa-solid ${m.icon} text-base w-5 text-center ${isActive ? 'text-gold-400' : 'text-slate-400'}"></i>
+                            <span>${m.label}</span>
+                        </button>
+                    `;
+                }
+            });
+
+            navContainer.innerHTML = html;
+            mobileNavContainer.innerHTML = html;
+        }
+
+        function navigateTo(tabId) {
+            state.activeTab = tabId;
+            renderSidebarNav();
+            const container = document.getElementById('viewContainer');
+
+            switch (tabId) {
+                case 'dashboard':
+                    renderDashboardView(container);
+                    break;
+                case 'santri':
+                    renderSantriView(container);
+                    break;
+                case 'setoran':
+                    renderSetoranView(container);
+                    break;
+                case 'murajaah':
+                    renderMurajaahView(container);
+                    break;
+                case 'target':
+                    renderTargetView(container);
+                    break;
+                case 'penilaian':
+                    renderPenilaianView(container);
+                    break;
+                case 'laporan':
+                    renderLaporanView(container);
+                    break;
+                case 'jadwal':
+                    renderJadwalView(container);
+                    break;
+                case 'quran':
+                    renderQuranView(container);
+                    break;
+                case 'notifications':
+                    renderNotificationsView(container);
+                    break;
+                case 'halaqah':
+                    renderHalaqahView(container);
+                    break;
+                case 'settings':
+                    renderSettingsView(container);
+                    break;
+                default:
+                    renderDashboardView(container);
+            }
+        }
+
+
+        function renderDashboardView(container) {
+            if (state.currentRole === 'admin') {
+                renderAdminDashboard(container);
+            } else if (state.currentRole === 'ustadz') {
+                renderUstadzDashboard(container);
+            } else {
+                renderSantriDashboard(container);
+            }
+        }
+
+        function renderAdminDashboard(container) {
+            const totalSantri = state.santriList.length;
+            const totalMusyrif = state.ustadzList.length;
+            const totalSetoran = state.setoranList.length;
+            const avgJuz = (state.santriList.reduce((acc, curr) => acc + curr.currentJuz, 0) / totalSantri).toFixed(1);
+
+            container.innerHTML = `
+                <!-- Summary KPI Cards -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500">Total Santri Tahfidz</p>
+                            <h3 class="text-2xl font-extrabold text-slate-900 mt-1">${totalSantri} <span class="text-xs font-normal text-slate-400">Santri</span></h3>
+                            <span class="inline-block text-[10px] text-emerald-700 bg-emerald-50 font-semibold px-2 py-0.5 rounded-full mt-2"><i class="fa-solid fa-arrow-up mr-1"></i>100% Aktif</span>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-800 rounded-2xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500">Ustadz / Musyrif</p>
+                            <h3 class="text-2xl font-extrabold text-slate-900 mt-1">${totalMusyrif} <span class="text-xs font-normal text-slate-400">Pengampu</span></h3>
+                            <span class="inline-block text-[10px] text-emerald-700 bg-emerald-50 font-semibold px-2 py-0.5 rounded-full mt-2">3 Kelompok Halaqah</span>
+                        </div>
+                        <div class="w-12 h-12 bg-amber-50 text-gold-600 rounded-2xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500">Setoran Hari Ini</p>
+                            <h3 class="text-2xl font-extrabold text-slate-900 mt-1">${totalSetoran} <span class="text-xs font-normal text-slate-400">Setoran</span></h3>
+                            <span class="inline-block text-[10px] text-emerald-700 bg-emerald-50 font-semibold px-2 py-0.5 rounded-full mt-2">Terverifikasi</span>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500">Rata-rata Capaian</p>
+                            <h3 class="text-2xl font-extrabold text-emerald-900 mt-1">${avgJuz} <span class="text-xs font-normal text-slate-400">Juz / Santri</span></h3>
+                            <span class="inline-block text-[10px] text-gold-700 bg-gold-50 font-semibold px-2 py-0.5 rounded-full mt-2">Target Pesantren: 15 Juz</span>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-900 text-gold-400 rounded-2xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm lg:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800">Tren Perkembangan Hafalan Pekanan</h3>
+                                <p class="text-xs text-slate-500">Jumlah halaman ziyadah hafalan baru seluruh santri</p>
+                            </div>
+                            <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg">Bulan Oktober 2026</span>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="adminProgressChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="text-sm font-bold text-slate-800 mb-1">Capaian Target Per Kelas</h3>
+                        <p class="text-xs text-slate-500 mb-4">Distribusi progres kelompok halaqah</p>
+                        <div class="h-64 flex items-center justify-center">
+                            <canvas id="adminTargetDoughnut"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Submissions & Need Attention Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recent Setoran Table -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-emerald-700"></i> Setoran Terbaru
+                            </h3>
+                            <button onclick="navigateTo('setoran')" class="text-xs font-semibold text-emerald-700 hover:underline">Lihat Semua</button>
+                        </div>
+                        <div class="space-y-3">
+                            ${state.setoranList.slice(0, 4).map(s => `
+                                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-emerald-200 transition">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-9 h-9 rounded-full bg-emerald-800 text-gold-400 flex items-center justify-center font-bold text-xs">
+                                            ${s.santriName.substring(0, 2).toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-800">${s.santriName}</p>
+                                            <p class="text-[11px] text-slate-500">${s.surahName} (Ayat ${s.ayatStart}-${s.ayatEnd}) • <span class="text-emerald-700 font-medium">${s.type}</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${s.status === 'Diterima' || s.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                            ${s.status}
+                                        </span>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">Nilai: <strong class="text-slate-700">${s.finalScore}</strong></p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Santri Requiring Attention -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Perlu Perhatian Khusus
+                            </h3>
+                            <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">Progres Lambat</span>
+                        </div>
+                        <div class="space-y-3">
+                            ${state.santriList.filter(s => s.status === 'Perlu Perhatian' || s.status === 'Bina Khusus').map(s => `
+                                <div class="flex items-center justify-between p-3 rounded-xl bg-amber-50/50 border border-amber-200/60">
+                                    <div class="flex items-center space-x-3">
+                                        <img src="${s.avatar}" class="w-9 h-9 rounded-full object-cover">
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-800">${s.name}</p>
+                                            <p class="text-[11px] text-slate-500">${s.halaqah} • ${s.class}</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xs font-bold text-rose-600">${s.currentJuz} / ${s.targetJuz} Juz</span>
+                                        <button onclick="openSantriDetail('${s.id}')" class="block text-[11px] font-semibold text-emerald-800 hover:underline mt-0.5">Detail Profile</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize Charts
+            setTimeout(() => {
+                initAdminCharts();
+            }, 50);
+        }
+
+        function renderUstadzDashboard(container) {
+            const mySantri = state.santriList.filter(s => s.musyrif.includes('Ahmad') || s.musyrif.includes('Mahmud'));
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-emerald-900 text-white p-5 rounded-2xl shadow-md">
+                        <p class="text-xs text-emerald-200 font-medium">Santri Binaan Anda</p>
+                        <h3 class="text-3xl font-extrabold mt-1 text-gold-400">${mySantri.length} <span class="text-xs font-normal text-white">Santri</span></h3>
+                        <p class="text-[11px] text-emerald-300 mt-2">Halaqah Imam Asy-Syafi'i</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">Setoran Terverifikasi Hari Ini</p>
+                        <h3 class="text-3xl font-extrabold text-slate-800 mt-1">4 <span class="text-xs font-normal text-slate-400">Setoran</span></h3>
+                        <p class="text-[11px] text-emerald-700 font-semibold mt-2"><i class="fa-solid fa-check mr-1"></i>100% Dievaluasi</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">Rata-rata Kelancaran Bacaan</p>
+                        <h3 class="text-3xl font-extrabold text-emerald-900 mt-1">87.5 <span class="text-xs font-normal text-slate-400">/ 100</span></h3>
+                        <p class="text-[11px] text-gold-600 font-semibold mt-2">Kategori: Jayyid Jiddan</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800">Daftar Santri Binaan Halaqah</h3>
+                            <p class="text-xs text-slate-500">Pantau perkembangan dan berikan evaluasi hafalan</p>
+                        </div>
+                        <button onclick="openModal('modalSetoran')" class="bg-emerald-800 text-white text-xs px-3 py-1.5 rounded-xl font-bold shadow hover:bg-emerald-900">
+                            + Input Setoran Baru
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${mySantri.map(s => {
+                            const pct = Math.round((s.currentJuz / s.targetJuz) * 100);
+                            return `
+                                <div class="p-4 rounded-xl border border-slate-200 hover:border-emerald-300 transition bg-slate-50/50 flex flex-col justify-between space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <img src="${s.avatar}" class="w-10 h-10 rounded-full object-cover border border-slate-300">
+                                            <div>
+                                                <h4 class="text-xs font-bold text-slate-900">${s.name}</h4>
+                                                <p class="text-[11px] text-slate-500">Kelas ${s.class} • NIS ${s.nis}</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${s.status === 'Aktif' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${s.status}</span>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-[11px] font-semibold text-slate-700 mb-1">
+                                            <span>Progres Target Hafalan</span>
+                                            <span class="text-emerald-800">${s.currentJuz} / ${s.targetJuz} Juz (${pct}%)</span>
+                                        </div>
+                                        <div class="w-full bg-slate-200 rounded-full h-2">
+                                            <div class="bg-emerald-700 h-2 rounded-full" style="width: ${pct}%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between pt-2 border-t border-slate-200/60 text-[11px]">
+                                        <span class="text-slate-500">Hafalan Terakhir: <strong class="text-slate-800">${s.currentSurah} (${s.currentAyat})</strong></span>
+                                        <button onclick="openSantriDetail('${s.id}')" class="font-bold text-emerald-800 hover:underline">
+                                            Detail Santri <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSantriDashboard(container) {
+            const santri = state.santriList[0]; // Muhammad Farhan
+            const pct = Math.round((santri.currentJuz / santri.targetJuz) * 100);
+
+            container.innerHTML = `
+                <!-- Personal Profile Card -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center gap-6">
+                    <img src="${santri.avatar}" class="w-20 h-20 rounded-2xl object-cover border-4 border-emerald-100 shadow-md">
+                    <div class="flex-1 text-center md:text-left space-y-1">
+                        <div class="flex items-center justify-center md:justify-start gap-2">
+                            <h2 class="text-lg font-extrabold text-slate-900">${santri.name}</h2>
+                            <span class="bg-gold-100 text-gold-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Santri Teladan</span>
+                        </div>
+                        <p class="text-xs text-slate-500">Kelas ${santri.class} • ${santri.halaqah}</p>
+                        <p class="text-xs text-emerald-800 font-semibold"><i class="fa-solid fa-user-check mr-1"></i>Musyrif: ${santri.musyrif}</p>
+                    </div>
+                    <div class="bg-emerald-900 text-white p-4 rounded-xl text-center min-w-[160px]">
+                        <p class="text-[11px] text-emerald-200">Total Capaian Saat Ini</p>
+                        <p class="text-3xl font-extrabold text-gold-400 my-0.5">${santri.currentJuz} <span class="text-xs font-normal text-white">Juz</span></p>
+                        <p class="text-[10px] text-emerald-300">Target Semester: ${santri.targetJuz} Juz</p>
+                    </div>
+                </div>
+
+                <!-- Progress & Stats Section -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Progress Bar Box -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm md:col-span-2 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-slate-800">Target Hafalan Semester Ganjil</h3>
+                            <span class="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg">${pct}% Tercapai</span>
+                        </div>
+                        
+                        <div class="w-full bg-slate-100 rounded-full h-4 p-0.5 border border-slate-200">
+                            <div class="bg-gradient-to-r from-emerald-600 to-gold-500 h-3 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-3 pt-2 text-center">
+                            <div class="p-3 bg-slate-50 rounded-xl">
+                                <p class="text-[10px] text-slate-500">Surah Terakhir</p>
+                                <p class="text-xs font-bold text-slate-800 mt-0.5">${santri.currentSurah}</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-xl">
+                                <p class="text-[10px] text-slate-500">Total Halaman</p>
+                                <p class="text-xs font-bold text-emerald-800 mt-0.5">${santri.totalPage} Halaman</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-xl">
+                                <p class="text-[10px] text-slate-500">Status Capaian</p>
+                                <p class="text-xs font-bold text-gold-600 mt-0.5">On Track <i class="fa-solid fa-check"></i></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ustadz Recommendation Card -->
+                    <div class="bg-emerald-950 text-white p-5 rounded-2xl shadow-sm border border-emerald-800 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center space-x-2 text-gold-400 text-xs font-bold mb-2">
+                                <i class="fa-solid fa-comment-dots"></i>
+                                <span>Catatan Terakhir Ustadz</span>
+                            </div>
+                            <p class="text-xs text-emerald-100 italic leading-relaxed">
+                                "MasyaAllah Farhan, bacaan Al-Baqarah ayat 177-185 sudah sangat lancar. Pertahankan makhraj Kho dan perbanyak murojaah mandiri sebelum Subuh."
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-emerald-800 text-[10px] text-emerald-300 flex justify-between items-center">
+                            <span>Ustadz Ahmad • Kemarin</span>
+                            <button onclick="navigateTo('setoran')" class="text-gold-400 font-bold hover:underline">Riwayat Setoran</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent My Setoran Table -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-slate-800 mb-3">Riwayat Setoran Hafalan Saya</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-[11px] text-slate-500 uppercase border-b border-slate-200">
+                                    <th class="p-3">Tanggal</th>
+                                    <th class="p-3">Jenis</th>
+                                    <th class="p-3">Materi (Surah & Ayat)</th>
+                                    <th class="p-3">Juz</th>
+                                    <th class="p-3">Nilai</th>
+                                    <th class="p-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs divide-y divide-slate-100">
+                                ${state.setoranList.filter(s => s.santriId === 'S001').map(s => `
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 font-medium text-slate-600">${s.date}</td>
+                                        <td class="p-3"><span class="font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">${s.type}</span></td>
+                                        <td class="p-3 font-bold text-slate-800">${s.surahName} (${s.ayatStart}-${s.ayatEnd})</td>
+                                        <td class="p-3 font-semibold">Juz ${s.juz}</td>
+                                        <td class="p-3"><span class="font-extrabold text-emerald-800">${s.finalScore}</span></td>
+                                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.status === 'Diterima' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${s.status}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initAdminCharts() {
+            const ctx1 = document.getElementById('adminProgressChart');
+            if (ctx1) {
+                new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: ['Pekan 1', 'Pekan 2', 'Pekan 3', 'Pekan 4'],
+                        datasets: [{
+                            label: 'Halaman Ziyadah Disetor',
+                            data: [120, 180, 240, 310],
+                            borderColor: '#047857',
+                            backgroundColor: 'rgba(4, 120, 87, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            const ctx2 = document.getElementById('adminTargetDoughnut');
+            if (ctx2) {
+                new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Target Tercapai', 'On Track', 'Perlu Perhatian'],
+                        datasets: [{
+                            data: [65, 25, 10],
+                            backgroundColor: ['#047857', '#fbbf24', '#f43f5e']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+        }
+
+
+        function renderSantriView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <!-- Filters & Actions Header -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">Data Santri Tahfidz</h2>
+                            <p class="text-xs text-slate-500">Kelola informasi santri, musyrif pengampu, dan status hafalan</p>
+                        </div>
+                        ${state.currentRole === 'admin' ? `
+                            <button onclick="showToast('Fitur Tambah Santri Siap Digunakan', 'success')" class="bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                                <i class="fa-solid fa-user-plus"></i>
+                                <span>Tambah Santri Baru</span>
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    <!-- Search & Filter Controls -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                        <div class="sm:col-span-2 relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            <input type="text" id="santriSearch" onkeyup="filterSantriTable()" placeholder="Cari NIS atau Nama Santri..." class="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                        </div>
+                        <select id="santriClassFilter" onchange="filterSantriTable()" class="text-xs p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                            <option value="">Semua Kelas</option>
+                            <option value="X IPA 1">X IPA 1</option>
+                            <option value="X IPA 2">X IPA 2</option>
+                            <option value="XI IPS 2">XI IPS 2</option>
+                            <option value="XII Agama">XII Agama</option>
+                        </select>
+                        <select id="santriStatusFilter" onchange="filterSantriTable()" class="text-xs p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none">
+                            <option value="">Semua Status</option>
+                            <option value="Aktif">Aktif</option>
+                            <option value="Bina Khusus">Bina Khusus</option>
+                            <option value="Perlu Perhatian">Perlu Perhatian</option>
+                        </select>
+                    </div>
+
+                    <!-- Santri Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse" id="santriMainTable">
+                            <thead>
+                                <tr class="bg-slate-50 text-[11px] text-slate-500 uppercase border-b border-slate-200">
+                                    <th class="p-3">Santri</th>
+                                    <th class="p-3">Kelas & NIS</th>
+                                    <th class="p-3">Halaqah & Musyrif</th>
+                                    <th class="p-3">Capaian / Target</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs divide-y divide-slate-100" id="santriTableBody">
+                                ${renderSantriRows(state.santriList)}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSantriRows(list) {
+            return list.map(s => {
+                const pct = Math.round((s.currentJuz / s.targetJuz) * 100);
+                return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3">
+                            <div class="flex items-center space-x-3">
+                                <img src="${s.avatar}" class="w-9 h-9 rounded-full object-cover border border-slate-200">
+                                <div>
+                                    <p class="font-bold text-slate-900">${s.name}</p>
+                                    <p class="text-[10px] text-slate-400">${s.phone}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-3">
+                            <p class="font-medium text-slate-800">${s.class}</p>
+                            <p class="text-[10px] text-slate-400">NIS: ${s.nis}</p>
+                        </td>
+                        <td class="p-3">
+                            <p class="font-medium text-emerald-900">${s.halaqah}</p>
+                            <p class="text-[10px] text-slate-500">${s.musyrif}</p>
+                        </td>
+                        <td class="p-3">
+                            <div class="w-32">
+                                <div class="flex justify-between text-[10px] font-semibold mb-1">
+                                    <span>${s.currentJuz} / ${s.targetJuz} Juz</span>
+                                    <span class="text-emerald-800">${pct}%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 rounded-full h-1.5">
+                                    <div class="bg-emerald-700 h-1.5 rounded-full" style="width: ${pct}%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-3">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.status === 'Aktif' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                ${s.status}
+                            </span>
+                        </td>
+                        <td class="p-3 text-right space-x-1">
+                            <button onclick="openSantriDetail('${s.id}')" title="Detail Santri" class="p-1.5 text-slate-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            ${state.currentRole === 'admin' ? `
+                                <button onclick="confirmDeleteSantri('${s.id}')" title="Hapus Data" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterSantriTable() {
+            const query = document.getElementById('santriSearch').value.toLowerCase();
+            const cls = document.getElementById('santriClassFilter').value;
+            const sts = document.getElementById('santriStatusFilter').value;
+
+            const filtered = state.santriList.filter(s => {
+                const matchesQuery = s.name.toLowerCase().includes(query) || s.nis.includes(query);
+                const matchesClass = cls === '' || s.class === cls;
+                const matchesStatus = sts === '' || s.status === sts;
+                return matchesQuery && matchesClass && matchesStatus;
+            });
+
+            document.getElementById('santriTableBody').innerHTML = renderSantriRows(filtered);
+        }
+
+        function openSantriDetail(id) {
+            const santri = state.santriList.find(s => s.id === id);
+            if (!santri) return;
+
+            const setoranHistory = state.setoranList.filter(s => s.santriId === id);
+            const detailContainer = document.getElementById('detailSantriContent');
+
+            detailContainer.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Detail Header -->
+                    <div class="flex flex-col sm:flex-row items-center gap-4 bg-emerald-950 text-white p-5 rounded-2xl">
+                        <img src="${santri.avatar}" class="w-16 h-16 rounded-2xl object-cover border-2 border-gold-400 shadow">
+                        <div class="text-center sm:text-left flex-1">
+                            <h3 class="text-lg font-bold">${santri.name}</h3>
+                            <p class="text-xs text-emerald-200">NIS: ${santri.nis} • Kelas ${santri.class}</p>
+                            <p class="text-xs text-gold-400 mt-1"><i class="fa-solid fa-mosque mr-1"></i>${santri.halaqah} (${santri.musyrif})</p>
+                        </div>
+                        <div class="text-center bg-emerald-900 px-4 py-2 rounded-xl border border-emerald-800">
+                            <p class="text-[10px] text-emerald-300">Capaian Saat Ini</p>
+                            <p class="text-2xl font-extrabold text-gold-400">${santri.currentJuz} <span class="text-xs font-normal text-white">/ ${santri.targetJuz} Juz</span></p>
+                        </div>
+                    </div>
+
+                    <!-- History Setoran Submissions -->
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Riwayat Setoran Terbaru</h4>
+                        <div class="space-y-2">
+                            ${setoranHistory.length > 0 ? setoranHistory.map(sh => `
+                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs flex justify-between items-center">
+                                    <div>
+                                        <p class="font-bold text-slate-800">${sh.surahName} (Ayat ${sh.ayatStart}-${sh.ayatEnd})</p>
+                                        <p class="text-[10px] text-slate-500">${sh.date} • Jenis: ${sh.type}</p>
+                                        ${sh.notes ? `<p class="text-[11px] text-emerald-800 italic mt-1 font-medium">"${sh.notes}"</p>` : ''}
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-sm font-extrabold text-emerald-900">${sh.finalScore}</span>
+                                        <p class="text-[10px] text-slate-400">Skala 100</p>
+                                    </div>
+                                </div>
+                            `).join('') : '<p class="text-xs text-slate-400 italic">Belum ada riwayat setoran tercatat.</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            openModal('modalDetailSantri');
+        }
+
+        function confirmDeleteSantri(id) {
+            const santri = state.santriList.find(s => s.id === id);
+            if (!santri) return;
+
+            document.getElementById('confirmTitle').innerText = 'Hapus Santri Tahfidz';
+            document.getElementById('confirmMessage').innerText = `Apakah Anda yakin ingin menghapus data santri ${santri.name}? Data setoran dan nilainya akan ikut terhapus.`;
+            
+            document.getElementById('confirmExecuteBtn').onclick = () => {
+                state.santriList = state.santriList.filter(s => s.id !== id);
+                addAuditLog('Hapus Santri', `Menghapus data santri ${santri.name} (${santri.nis})`);
+                closeModal('modalConfirm');
+                renderSantriView(document.getElementById('viewContainer'));
+                showToast(`Data santri ${santri.name} berhasil dihapus.`, 'success');
+            };
+
+            openModal('modalConfirm');
+        }
+
+
+        function renderSetoranView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">Pencatatan Setoran Hafalan</h2>
+                            <p class="text-xs text-slate-500">Kelola dan evaluasi setoran hafalan baru (Ziyadah) & Murajaah</p>
+                        </div>
+                        <button onclick="openModal('modalSetoran')" class="bg-gold-500 hover:bg-gold-600 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Input Setoran Baru</span>
+                        </button>
+                    </div>
+
+                    <!-- Setoran Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-[11px] text-slate-500 uppercase border-b border-slate-200">
+                                    <th class="p-3">Tanggal</th>
+                                    <th class="p-3">Santri</th>
+                                    <th class="p-3">Materi Surah & Ayat</th>
+                                    <th class="p-3">Jenis</th>
+                                    <th class="p-3">Penilaian (Tajwid/Kelancaran)</th>
+                                    <th class="p-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs divide-y divide-slate-100">
+                                ${state.setoranList.map(s => `
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 font-medium text-slate-500">${s.date}</td>
+                                        <td class="p-3 font-bold text-slate-900">${s.santriName}</td>
+                                        <td class="p-3">
+                                            <p class="font-bold text-emerald-900">${s.surahName}</p>
+                                            <p class="text-[10px] text-slate-400">Ayat ${s.ayatStart}-${s.ayatEnd} • Hal. ${s.page} (Juz ${s.juz})</p>
+                                        </td>
+                                        <td class="p-3"><span class="bg-emerald-50 text-emerald-800 font-semibold px-2 py-0.5 rounded text-[10px]">${s.type}</span></td>
+                                        <td class="p-3">
+                                            <span class="font-extrabold text-sm text-emerald-900">${s.finalScore}</span>
+                                            <span class="text-[10px] text-slate-400"> / 100</span>
+                                        </td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.status === 'Diterima' || s.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                                ${s.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            populateSetoranModalOptions();
+        }
+
+        function populateSetoranModalOptions() {
+            const santriSelect = document.getElementById('setoranSantriId');
+            const surahSelect = document.getElementById('setoranSurah');
+
+            if (santriSelect) {
+                santriSelect.innerHTML = '<option value="">-- Pilih Santri --</option>' + 
+                    state.santriList.map(s => `<option value="${s.id}">${s.name} (${s.class})</option>`).join('');
+            }
+
+            if (surahSelect) {
+                surahSelect.innerHTML = state.surahData.map(sr => `<option value="${sr.name}">${sr.id}. ${sr.name} (${sr.arabic})</option>`).join('');
+            }
+
+            // Default date to today
+            const today = new Date().toISOString().substring(0, 10);
+            document.getElementById('setoranTanggal').value = today;
+        }
+
+        function handleSurahSelectChange(surahName) {
+            const surah = state.surahData.find(s => s.name === surahName);
+            if (surah) {
+                document.getElementById('setoranAyatMulai').value = 1;
+                document.getElementById('setoranAyatAkhir').value = Math.min(10, surah.ayat);
+                document.getElementById('setoranHalaman').value = surah.page;
+            }
+        }
+
+        function handleSaveSetoran(event) {
+            event.preventDefault();
+            const santriId = document.getElementById('setoranSantriId').value;
+            const santri = state.santriList.find(s => s.id === santriId);
+            if (!santri) {
+                showToast('Pilih santri terlebih dahulu!', 'error');
+                return;
+            }
+
+            const surahName = document.getElementById('setoranSurah').value;
+            const k = parseInt(document.getElementById('scoreKelancaran').value) || 80;
+            const t = parseInt(document.getElementById('scoreTajwid').value) || 80;
+            const m = parseInt(document.getElementById('scoreMakhraj').value) || 80;
+            const f = parseInt(document.getElementById('scoreFashahah').value) || 80;
+            const a = parseInt(document.getElementById('scoreAdab').value) || 80;
+            const avg = Math.round((k + t + m + f + a) / 5);
+
+            const newSetoran = {
+                id: 'STR-' + Date.now(),
+                santriId: santri.id,
+                santriName: santri.name,
+                date: document.getElementById('setoranTanggal').value,
+                type: document.getElementById('setoranJenis').value,
+                surahName: surahName,
+                ayatStart: parseInt(document.getElementById('setoranAyatMulai').value),
+                ayatEnd: parseInt(document.getElementById('setoranAyatAkhir').value),
+                page: parseInt(document.getElementById('setoranHalaman').value),
+                juz: parseInt(document.getElementById('setoranJuz').value),
+                status: document.getElementById('setoranStatus').value,
+                scoreKelancaran: k,
+                scoreTajwid: t,
+                scoreMakhraj: m,
+                scoreFashahah: f,
+                scoreAdab: a,
+                finalScore: avg,
+                notes: document.getElementById('setoranCatatan').value
+            };
+
+            state.setoranList.unshift(newSetoran);
+
+            // Dynamically update santri metrics if accepted
+            if (newSetoran.status === 'Diterima' || newSetoran.status === 'Selesai') {
+                santri.currentSurah = surahName;
+                santri.currentAyat = newSetoran.ayatEnd;
+                santri.totalPage += 1;
+            }
+
+            addAuditLog('Input Setoran', `Menambahkan setoran ${surahName} untuk ${santri.name} dengan nilai ${avg}`);
+            closeModal('modalSetoran');
+            showToast(`Setoran hafalan ${santri.name} berhasil disimpan!`, 'success');
+
+            if (state.activeTab === 'setoran') renderSetoranView(document.getElementById('viewContainer'));
+            else if (state.activeTab === 'dashboard') renderDashboardView(document.getElementById('viewContainer'));
+        }
+
+
+        function renderMurajaahView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">Jurnal & Konsistensi Murajaah</h2>
+                            <p class="text-xs text-slate-500">Pencatatan aktivitas pengulangan hafalan harian santri</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${state.murajaahList.map(m => `
+                            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex justify-between items-center">
+                                <div>
+                                    <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">${m.date}</span>
+                                    <h4 class="text-xs font-bold text-slate-900 mt-1">${m.santriName}</h4>
+                                    <p class="text-[11px] text-slate-500">Murojaah Juz ${m.juz} • ${m.pages} Halaman</p>
+                                    <p class="text-[11px] text-emerald-900 italic font-medium mt-1">"${m.notes}"</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs font-bold text-gold-600 bg-gold-50 border border-gold-200 px-2.5 py-1 rounded-lg">${m.fluency}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTargetView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Monitoring Target Hafalan Semester</h2>
+                    <div class="space-y-4">
+                        ${state.santriList.map(s => {
+                            const pct = Math.round((s.currentJuz / s.targetJuz) * 100);
+                            const statusTag = pct >= 80 ? 'On Track' : (pct >= 50 ? 'Perlu Ditingkatkan' : 'Perhatian');
+                            const tagColor = pct >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
+                            return `
+                                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                                    <div class="flex justify-between items-center text-xs">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="font-bold text-slate-900">${s.name}</span>
+                                            <span class="text-slate-400">(${s.class})</span>
+                                        </div>
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${tagColor}">${statusTag}</span>
+                                    </div>
+                                    <div class="w-full bg-slate-200 rounded-full h-3">
+                                        <div class="bg-emerald-700 h-3 rounded-full transition-all" style="width: ${pct}%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-[11px] text-slate-500 font-medium">
+                                        <span>Capaian: ${s.currentJuz} Juz</span>
+                                        <span>Target: ${s.targetJuz} Juz (${pct}%)</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPenilaianView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Rekapitulasi Penilaian Kualitas Hafalan</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-[11px] text-slate-500 uppercase border-b border-slate-200">
+                                    <th class="p-3">Santri</th>
+                                    <th class="p-3">Kelancaran</th>
+                                    <th class="p-3">Tajwid</th>
+                                    <th class="p-3">Makhraj</th>
+                                    <th class="p-3">Fashahah</th>
+                                    <th class="p-3">Adab</th>
+                                    <th class="p-3">Rata-rata</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs divide-y divide-slate-100">
+                                ${state.santriList.map(s => `
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 font-bold text-slate-800">${s.name}</td>
+                                        <td class="p-3 text-emerald-800 font-semibold">88</td>
+                                        <td class="p-3 text-emerald-800 font-semibold">90</td>
+                                        <td class="p-3 text-emerald-800 font-semibold">86</td>
+                                        <td class="p-3 text-emerald-800 font-semibold">87</td>
+                                        <td class="p-3 text-emerald-800 font-semibold">95</td>
+                                        <td class="p-3 font-extrabold text-sm text-gold-600">89.2</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLaporanView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4 no-print">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">Laporan Perkembangan Hafalan Tahfidz</h2>
+                            <p class="text-xs text-slate-500">Cetak laporan resmi evaluasi santri untuk wali murid / pimpinan</p>
+                        </div>
+                        <button onclick="window.print()" class="bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                            <i class="fa-solid fa-print"></i>
+                            <span>Cetak Laporan PDF</span>
+                        </button>
+                    </div>
+
+                    <!-- Report Document View -->
+                    <div class="p-6 border border-slate-300 rounded-2xl space-y-6 bg-white">
+                        <div class="text-center border-b-2 border-emerald-900 pb-4">
+                            <h2 class="text-lg font-bold uppercase tracking-wide text-emerald-950">PESANTREN TAHFIDZ AL-QUR'AN PRO</h2>
+                            <p class="text-xs text-slate-600">Jl. Islamic Center No. 100, Makassar • Telp: (0411) 889910</p>
+                            <p class="text-xs font-bold text-gold-600 mt-1">RAPOR PERKEMBANGAN HAFALAN TAHFIDZ</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 text-xs space-y-1">
+                            <div><span class="text-slate-500">Nama Santri:</span> <strong class="text-slate-900">Muhammad Farhan</strong></div>
+                            <div><span class="text-slate-500">Tahun Ajaran:</span> <strong class="text-slate-900">2026/2027 (Ganjil)</strong></div>
+                            <div><span class="text-slate-500">Kelas / NIS:</span> <strong class="text-slate-900">X IPA 1 / 10293801</strong></div>
+                            <div><span class="text-slate-500">Musyrif Pengampu:</span> <strong class="text-slate-900">Ustadz Ahmad, S.Pd.I</strong></div>
+                        </div>
+
+                        <table class="w-full text-left text-xs border border-slate-300 border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300">
+                                    <th class="p-2 border-r border-slate-300">Indikator Evaluasi</th>
+                                    <th class="p-2 border-r border-slate-300 text-center">Nilai Akhir</th>
+                                    <th class="p-2">Keterangan / Predikat</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                                <tr>
+                                    <td class="p-2 border-r border-slate-300">Kelancaran Hafalan (Fashahah)</td>
+                                    <td class="p-2 border-r border-slate-300 text-center font-bold">88</td>
+                                    <td class="p-2 text-emerald-800 font-semibold">Sangat Baik (Jayyid Jiddan)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border-r border-slate-300">Ketepatan Tajwid & Makhraj</td>
+                                    <td class="p-2 border-r border-slate-300 text-center font-bold">90</td>
+                                    <td class="p-2 text-emerald-800 font-semibold">Sangat Baik (Jayyid Jiddan)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border-r border-slate-300">Konsistensi Murojaah Mandiri</td>
+                                    <td class="p-2 border-r border-slate-300 text-center font-bold">95</td>
+                                    <td class="p-2 text-gold-600 font-semibold">Istimewa (Mumtaz)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="pt-8 grid grid-cols-2 text-center text-xs">
+                            <div>
+                                <p class="text-slate-500">Mengetahui, Wali Santri</p>
+                                <div class="h-12"></div>
+                                <p class="font-bold border-b border-slate-400 inline-block px-4">( .................................... )</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-500">Musyrif Tahfidz</p>
+                                <div class="h-12"></div>
+                                <p class="font-bold border-b border-slate-400 inline-block px-4">Ustadz Ahmad, S.Pd.I</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderJadwalView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Jadwal Kegiatan Tahfidz & Tasmi'</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        ${state.schedules.map(sch => `
+                            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 space-y-2">
+                                <span class="text-[10px] font-bold text-gold-700 bg-gold-100 px-2 py-0.5 rounded">${sch.type}</span>
+                                <h4 class="text-xs font-bold text-slate-900">${sch.title}</h4>
+                                <p class="text-[11px] text-slate-600"><i class="fa-solid fa-clock text-emerald-700 mr-1"></i>${sch.time}</p>
+                                <p class="text-[11px] text-slate-600"><i class="fa-solid fa-location-dot text-emerald-700 mr-1"></i>${sch.location}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuranView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-book-quran text-gold-600"></i> Al-Qur'an Digital Referensi Setoran
+                        </h2>
+                        <span class="text-xs text-slate-500">Rasm Utsmani • 114 Surah</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        ${state.surahData.map(sr => `
+                            <div class="p-3 rounded-xl border border-slate-200 hover:border-emerald-300 transition bg-slate-50/50 flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-lg bg-emerald-900 text-gold-400 font-bold text-xs flex items-center justify-center">
+                                        ${sr.id}
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-900">${sr.name}</h4>
+                                        <p class="text-[10px] text-slate-500">${sr.ayat} Ayat • ${sr.place}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="font-arabic text-base font-bold text-emerald-900">${sr.arabic}</span>
+                                    <button onclick="quickSetorSurah('${sr.name}')" class="block text-[10px] font-bold text-gold-600 hover:underline mt-1">+ Setor Surah</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function quickSetorSurah(surahName) {
+            openModal('modalSetoran');
+            const select = document.getElementById('setoranSurah');
+            if (select) {
+                select.value = surahName;
+                handleSurahSelectChange(surahName);
+            }
+        }
+
+        function renderNotificationsView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Pusat Notifikasi & Informasi</h2>
+                    <div class="space-y-3">
+                        ${state.notifications.map(n => `
+                            <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center mt-1">
+                                    <i class="fa-solid fa-bell text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-xs font-bold text-slate-900">${n.title}</h4>
+                                    <p class="text-xs text-slate-600 mt-0.5">${n.text}</p>
+                                    <span class="text-[10px] text-slate-400 mt-1 inline-block">${n.date}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHalaqahView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Kelompok Halaqah Tahfidz</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        ${state.ustadzList.map(u => `
+                            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+                                <h3 class="text-xs font-bold text-emerald-900">${u.halaqah}</h3>
+                                <p class="text-xs text-slate-700 font-semibold"><i class="fa-solid fa-user-tie text-gold-600 mr-1"></i>Musyrif: ${u.name}</p>
+                                <p class="text-[11px] text-slate-500">Anggota: <strong>${u.count} Santri</strong></p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSettingsView(container) {
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <h2 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Pengaturan Sistem & Log Audit</h2>
+                    
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Audit Log Aktivitas Pengguna</h3>
+                        <div class="space-y-2">
+                            ${state.auditLogs.map(l => `
+                                <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs flex justify-between items-center">
+                                    <div>
+                                        <span class="font-bold text-emerald-900">${l.user}</span>
+                                        <span class="text-slate-400"> • ${l.action}</span>
+                                        <p class="text-[11px] text-slate-600">${l.detail}</p>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400">${l.time}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+
+        function handleGlobalSearch(event) {
+            const query = event.target.value.toLowerCase().trim();
+            const resultsBox = document.getElementById('globalSearchResults');
+
+            if (query.length < 2) {
+                resultsBox.classList.add('hidden');
+                return;
+            }
+
+            const matchedSantri = state.santriList.filter(s => s.name.toLowerCase().includes(query));
+            const matchedSurah = state.surahData.filter(s => s.name.toLowerCase().includes(query));
+
+            let html = '';
+            if (matchedSantri.length > 0) {
+                html += `<div class="p-2 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase">Santri</div>`;
+                matchedSantri.forEach(s => {
+                    html += `
+                        <div onclick="openSantriDetail('${s.id}'); document.getElementById('globalSearchResults').classList.add('hidden');" class="p-3 hover:bg-emerald-50 cursor-pointer flex justify-between items-center text-xs border-b border-slate-100">
+                            <span class="font-bold text-slate-800">${s.name}</span>
+                            <span class="text-[10px] text-emerald-800 font-semibold">${s.currentJuz} Juz</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (matchedSurah.length > 0) {
+                html += `<div class="p-2 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase">Surah</div>`;
+                matchedSurah.forEach(s => {
+                    html += `
+                        <div onclick="quickSetorSurah('${s.name}'); document.getElementById('globalSearchResults').classList.add('hidden');" class="p-3 hover:bg-emerald-50 cursor-pointer flex justify-between items-center text-xs border-b border-slate-100">
+                            <span class="font-bold text-slate-800">${s.name}</span>
+                            <span class="font-arabic text-emerald-900 font-bold">${s.arabic}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (!html) {
+                html = `<div class="p-4 text-xs text-slate-400 text-center">Tidak ada hasil ditemukan.</div>`;
+            }
+
+            resultsBox.innerHTML = html;
+            resultsBox.classList.remove('hidden');
+        }
+
+        // Initialize application on window load
+        window.onload = function() {
+            renderSidebarNav();
+            navigateTo('dashboard');
+        };
+    </script>
+</body>
+</html>
